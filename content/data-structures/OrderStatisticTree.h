@@ -1,5 +1,5 @@
 /**
- * Author: Simon Lindholm
+ * Author: Simon Lindholm, Ludo Pulles
  * Date: 2016-03-22
  * License: CC0
  * Source: hacKIT, NWERC 2015
@@ -12,9 +12,9 @@
 #include <bits/extc++.h> /** keep-include */
 using namespace __gnu_pbds;
 
-template<class T>
-using Tree = tree<T, null_type, less<T>, rb_tree_tag,
-	  tree_order_statistics_node_update>;
+template<class TK, class TM> using TreeMap = tree<TK, TM,
+	less<TK>, rb_tree_tag, tree_order_statistics_node_update>;
+template<class T> using Tree = TreeMap<T, null_type>;
 
 void example() {
 	Tree<int> t, t2; t.insert(8);
