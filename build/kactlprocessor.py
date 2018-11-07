@@ -52,7 +52,7 @@ def addref(caption, outstream):
     with open('header.tmp', 'a') as f:
         f.write(caption + "\n")
 
-def processwithcomments(caption, instream, outstream, listingslang = None):
+def processwithcomments(caption, instream, outstream, f, lang = 'cpp'):
     knowncommands = ['Author', 'Date', 'Description', 'Source', 'Time', 'Memory', 'License', 'Status', 'Usage']
     requiredcommands = ['Author', 'Description']
     includelist = []
@@ -146,22 +146,28 @@ def processwithcomments(caption, instream, outstream, listingslang = None):
             out.append(r"\leftcaption{%s}" % pathescape(", ".join(includelist)))
         if nsource:
             out.append(r"\rightcaption{%d lines}" % len(nsource.split("\n")))
-        langstr = ", language="+listingslang if listingslang else ""
-        out.append(r"\begin{lstlisting}[caption={%s}%s]" % (pathescape(caption), langstr))
+        out.append(r"\begin{%scode}" % lang)
         out.append(nsource)
-        out.append(r"\end{lstlisting}")
+        out.append(r"\end{%scode}" % lang)
+        #out.append(r"\inputminted{%s}{%s}" % (lang, f))
 
     for line in out:
         print(line, file=outstream)
 
-def processraw(caption, instream, outstream, listingslang = 'raw'):
+def processraw(caption, instream, outstream, lang = 'raw'):
     try:
         source = instream.read().strip()
         addref(caption, outstream)
         print(r"\rightcaption{%d lines}" % len(source.split("\n")), file=outstream)
-        print(r"\begin{lstlisting}[language=%s,caption={%s}]" % (listingslang, pathescape(caption)), file=outstream)
-        print(source, file=outstream)
-        print(r"\end{lstlisting}", file=outstream)
+        if lang == 'raw':
+            print(r"\begin{lstlisting}[language=raw,caption={%s}]" % pathescape(caption), file=outstream)
+            print(source, file=outstream)
+            print(r"\end{lstlisting}", file=outstream)
+        else:
+            env = lang + 'code'
+            print(r"\begin{%s}" % env, file=outstream)
+            print(source, file=outstream)
+            print(r"\end{%s}" % env, file=outstream)
     except:
         print("\kactlerror{Could not read source.}", file=outstream)
 
@@ -202,6 +208,7 @@ def main():
     language = None
     caption = None
     instream = sys.stdin
+    infile = ""
     outstream = sys.stdout
     print_header_value = None
     try:
@@ -220,6 +227,7 @@ def main():
             if option in ("-o", "--output"):
                 outstream = open(value, "w")
             if option in ("-i", "--input"):
+                infile = value
                 instream = open(value)
                 if language == None:
                     language = getlang(value)
@@ -236,21 +244,23 @@ def main():
             return
         print(" * \x1b[1m{}\x1b[0m".format(caption))
         if language == "cpp" or language == "cc" or language == "c" or language == "h" or language == "hpp":
-            processwithcomments(caption, instream, outstream)
+            processwithcomments(caption, instream, outstream, infile)
         elif language == "java":
-            processwithcomments(caption, instream, outstream, 'Java')
+            processwithcomments(caption, instream, outstream, infile, 'java')
         elif language == "ps":
             processraw(caption, instream, outstream) # PostScript was added in listings v1.4
         elif language == "raw":
             processraw(caption, instream, outstream)
         elif language == "rawcpp":
-            processraw(caption, instream, outstream, 'C++')
+            processraw(caption, instream, outstream, 'cpp')
+        elif language == "rawvim":
+            processraw(caption, instream, outstream, 'vim')
         elif language == "sh":
             processraw(caption, instream, outstream, 'bash')
         elif language == "py":
-            processraw(caption, instream, outstream, 'Python')
+            processraw(caption, instream, outstream, 'python')
         else:
-            raise ValueError("Unkown language: " + str(language))
+            raise ValueError("Unknown language: " + str(language))
     except (ValueError, getopt.GetoptError, IOError) as err:
         print(str(err), file=sys.stderr)
         print("\t for help use --help", file=sys.stderr)
