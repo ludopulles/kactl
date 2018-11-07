@@ -15,6 +15,15 @@
 \usepackage[top=1cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
 \usepackage{minted}
 
+% Math and bit operators
+\DeclareMathOperator{\lcm}{lcm}
+\newcommand*\BitAnd{\mathrel{\&}}
+\newcommand*\BitOr{\mathrel{|}}
+\newcommand*\ShiftLeft{\ll}
+\newcommand*\ShiftRight{\gg}
+\newcommand*\BitNeg{\ensuremath{\mathord{\sim}}}
+\DeclareRobustCommand{\stirling}{\genfrac\{\}{0pt}{}}
+
 % Config commands
 \newcommand{\subtitle}[1]{
 	\def\@subtitle{#1}
@@ -66,7 +75,6 @@
 \setlength{\headheight}{15.2pt}
 \setlength{\droptitle}{-20pt}
 \posttitle{\par\end{center}}
-\renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
 \renewcommand{\headrulewidth}{0pt}
@@ -80,7 +88,7 @@
 \setlength\headsep{5pt}
 
 % Configure minted (parameter: language) (see section 6 of minted manual)
-\newminted{cpp}{fontsize=\small,breaklines,tabsize=2}
+\newminted{cpp}{fontsize=\footnotesize,breaklines,tabsize=2}
 \newminted{vim}{fontsize=\small,breaklines,tabsize=2}
 \newminted{bash}{fontsize=\small,breaklines,tabsize=2}
 \newminted{java}{fontsize=\small,breaklines,tabsize=2}

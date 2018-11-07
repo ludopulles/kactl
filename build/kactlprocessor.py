@@ -159,6 +159,7 @@ def processraw(caption, instream, outstream, lang = 'raw'):
             f.write(caption + "\n")
         print(r"\rightcaption{%d lines}" % len(source.split("\n")), file=outstream)
         if lang == 'raw':
+            # not used anymore, if I'm not mistaken...
             print(r"\begin{lstlisting}[language=raw,caption={%s}]" % pathescape(caption), file=outstream)
             print(source, file=outstream)
             print(r"\end{lstlisting}", file=outstream)
