@@ -52,7 +52,7 @@ def addref(caption, outstream):
     with open('header.tmp', 'a') as f:
         f.write(caption + "\n")
 
-def processwithcomments(caption, instream, outstream, f, lang = 'cpp'):
+def processwithcomments(caption, instream, outstream, lang = 'cpp'):
     knowncommands = ['Author', 'Date', 'Description', 'Source', 'Time', 'Memory', 'License', 'Status', 'Usage']
     requiredcommands = ['Author', 'Description']
     includelist = []
@@ -146,10 +146,9 @@ def processwithcomments(caption, instream, outstream, f, lang = 'cpp'):
             out.append(r"\leftcaption{%s}" % pathescape(", ".join(includelist)))
         if nsource:
             out.append(r"\rightcaption{%d lines}" % len(nsource.split("\n")))
-        out.append(r"\begin{%scode}" % lang)
+        out.append("\makecaption\n\\begin{%scode}" % lang)
         out.append(nsource)
         out.append(r"\end{%scode}" % lang)
-        #out.append(r"\inputminted{%s}{%s}" % (lang, f))
 
     for line in out:
         print(line, file=outstream)
@@ -208,7 +207,6 @@ def main():
     language = None
     caption = None
     instream = sys.stdin
-    infile = ""
     outstream = sys.stdout
     print_header_value = None
     try:
@@ -227,7 +225,6 @@ def main():
             if option in ("-o", "--output"):
                 outstream = open(value, "w")
             if option in ("-i", "--input"):
-                infile = value
                 instream = open(value)
                 if language == None:
                     language = getlang(value)
@@ -244,9 +241,9 @@ def main():
             return
         print(" * \x1b[1m{}\x1b[0m".format(caption))
         if language == "cpp" or language == "cc" or language == "c" or language == "h" or language == "hpp":
-            processwithcomments(caption, instream, outstream, infile)
+            processwithcomments(caption, instream, outstream)
         elif language == "java":
-            processwithcomments(caption, instream, outstream, infile, 'java')
+            processwithcomments(caption, instream, outstream)
         elif language == "ps":
             processraw(caption, instream, outstream) # PostScript was added in listings v1.4
         elif language == "raw":
