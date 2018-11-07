@@ -46,12 +46,6 @@ def ordoescape(input, esc=True):
             return r"%s\bigo{%s}%s" % (input[:start], input[start+2:end], ordoescape(input[end+1:], False))
     return input
 
-def addref(caption, outstream):
-    caption = pathescape(caption).strip()
-    print(r"\kactlref{%s}" % caption, file=outstream)
-    with open('header.tmp', 'a') as f:
-        f.write(caption + "\n")
-
 def processwithcomments(caption, instream, outstream, lang = 'cpp'):
     knowncommands = ['Author', 'Date', 'Description', 'Source', 'Time', 'Memory', 'License', 'Status', 'Usage']
     requiredcommands = ['Author', 'Description']
@@ -133,7 +127,10 @@ def processwithcomments(caption, instream, outstream, lang = 'cpp'):
     if error:
         out.append(r"\kactlerror{%s: %s}" % (caption, error))
     else:
-        addref(caption, outstream)
+        caption = pathescape(caption).strip()
+        out.append(r"\kactlref{%s}" % caption)
+        with open('header.tmp', 'a') as f:
+            f.write(caption + "\n")
         if commands.get("Description"):
             out.append(r"\defdescription{%s}" % escape(commands["Description"]))
         if commands.get("Usage"):
@@ -146,7 +143,7 @@ def processwithcomments(caption, instream, outstream, lang = 'cpp'):
             out.append(r"\leftcaption{%s}" % pathescape(", ".join(includelist)))
         if nsource:
             out.append(r"\rightcaption{%d lines}" % len(nsource.split("\n")))
-        out.append("\makecaption\n\\begin{%scode}" % lang)
+        out.append("\makecaption{%s}\n\\begin{%scode}" % (caption, lang))
         out.append(nsource)
         out.append(r"\end{%scode}" % lang)
 
@@ -156,7 +153,10 @@ def processwithcomments(caption, instream, outstream, lang = 'cpp'):
 def processraw(caption, instream, outstream, lang = 'raw'):
     try:
         source = instream.read().strip()
-        addref(caption, outstream)
+        caption = pathescape(caption).strip()
+        print(r"\kactlref{%s}" % caption, file=outstream)
+        with open('header.tmp', 'a') as f:
+            f.write(caption + "\n")
         print(r"\rightcaption{%d lines}" % len(source.split("\n")), file=outstream)
         if lang == 'raw':
             print(r"\begin{lstlisting}[language=raw,caption={%s}]" % pathescape(caption), file=outstream)
@@ -164,7 +164,7 @@ def processraw(caption, instream, outstream, lang = 'raw'):
             print(r"\end{lstlisting}", file=outstream)
         else:
             env = lang + 'code'
-            print(r"\begin{%s}" % env, file=outstream)
+            print("\makecaption{%s}\n\\begin{%s}" % (caption, env), file=outstream)
             print(source, file=outstream)
             print(r"\end{%s}" % env, file=outstream)
     except:

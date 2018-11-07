@@ -2,21 +2,20 @@
 % Written by Håkan Terelius, 2008-11-24
 \ProvidesPackage{kactlpkg}
 
-\usepackage{amsmath, amsthm, amssymb, amsfonts,booktabs,caption,color,courier}
+\usepackage{amsmath,amsthm,amssymb,amsfonts,braket,booktabs,caption,color}
 \usepackage{datetime,enumitem,fancyhdr,float,fullpage,graphicx,latexsym}
 \usepackage{listings,multicol,parcolumns,subcaption,textcomp,titling,upquote}
 \usepackage{verbatim,wrapfig}
-\usepackage{braket} % \set{}
 
 \usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scaled]{beramono}
 \usepackage[T1]{fontenc}
 \usepackage[utf8x]{inputenc}
 
 \usepackage[top=1cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
-
 \usepackage{minted}
-% Config commands
 
+% Config commands
 \newcommand{\subtitle}[1]{
 	\def\@subtitle{#1}
 }
@@ -139,9 +138,9 @@
 	\setboolean{hastime}{false}
 	\setboolean{hasmemory}{false}
 	\setboolean{hasleftcaption}{false}
-	\myneedspace{3\baselineskip}
-	\penalty-100
-	#2
+	% \myneedspace{3\baselineskip}
+	% \penalty-100
+	%#2
 	\immediate\write18{rm -f kactl.tmp} % Don't include old kactl.tmp on failure.
 	\immediate\write18{python2 kactlprocessor.py -i "\@kactldir/#2" -o kactl.tmp #1}
 	\immediate\input{kactl.tmp}
@@ -221,7 +220,8 @@
 	{\par\noindent\scriptsize{\textbf{#1:} #2\par}}
 }
 
-\newcommand{\makecaption}[0]{
+\newcommand{\makecaption}[1]{
+	\begin{center} \textbf{#1}\end{center}
 	\ifthenelse{\boolean{hasdescription}}{\codeheader{Description}{\@defdescription}}{}
 	\ifthenelse{\boolean{hasusage}}{\codeheader{Usage}{\@defusage}}{}
 	\ifthenelse{\boolean{hasmemory}}{\codeheader{Memory}{\@defmemory}}{}
@@ -229,7 +229,7 @@
 	\ifthenelse{\boolean{hasleftcaption}}{\vspace{0pt}}{\vspace{-5pt}}
 	\tiny
 	\texttt{\@leftcaption} \hfill \@rightcaption
-	\vspace{.3em}
+	\vspace{.15em}
 	\hrule
 }
 
