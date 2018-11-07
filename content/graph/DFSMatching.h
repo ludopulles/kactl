@@ -7,10 +7,10 @@
  * be just fine in most cases. Graph $g$ should be a list of
  * neighbours of the left partition. $n$ is the size of the left
  * partition and $m$ is the size of the right partition.
- * If you want to get the matched pairs, $match[i]$ contains
+ * If you want to get the matched pairs, \texttt{match[i]} contains
  * match for vertex $i$ on the right side or $-1$ if it's not
  * matched.
- * Time: O(EV) where $E$ is the number of edges and V is the number of vertices.
+ * Time: O(VE)
  * Status: works
  */
 #pragma once
