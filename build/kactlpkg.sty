@@ -88,7 +88,7 @@
 \setlength\headsep{5pt}
 
 % Configure minted (parameter: language) (see section 6 of minted manual)
-\newminted{cpp}{fontsize=\footnotesize,breaklines,tabsize=2}
+\newminted{cpp}{fontsize=\small,breaklines,tabsize=2}
 \newminted{vim}{fontsize=\small,breaklines,tabsize=2}
 \newminted{bash}{fontsize=\small,breaklines,tabsize=2}
 \newminted{java}{fontsize=\small,breaklines,tabsize=2}
@@ -146,9 +146,8 @@
 	\setboolean{hastime}{false}
 	\setboolean{hasmemory}{false}
 	\setboolean{hasleftcaption}{false}
-	% \myneedspace{3\baselineskip}
-	% \penalty-100
-	%#2
+	\myneedspace{3\baselineskip}
+	\penalty-100
 	\immediate\write18{rm -f kactl.tmp} % Don't include old kactl.tmp on failure.
 	\immediate\write18{python2 kactlprocessor.py -i "\@kactldir/#2" -o kactl.tmp #1}
 	\immediate\input{kactl.tmp}
@@ -235,8 +234,7 @@
 	\ifthenelse{\boolean{hasmemory}}{\codeheader{Memory}{\@defmemory}}{}
 	\ifthenelse{\boolean{hastime}}{\codeheader{Time}{\@deftime}}{}
 	\ifthenelse{\boolean{hasleftcaption}}{\vspace{0pt}}{\vspace{-5pt}}
-	\tiny
-	\texttt{\@leftcaption} \hfill \@rightcaption
+	{ \tiny \texttt{\@leftcaption} \hfill \@rightcaption }
 	\vspace{.15em}
 	\hrule
 }
