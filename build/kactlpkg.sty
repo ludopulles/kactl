@@ -329,3 +329,12 @@
 \newcommand{\bigo}[1] {\ensuremath{\mathcal{O} \left( #1 \right)}}
 
 \newcommand{\hardcolumnbreak}{\vfill\null\columnbreak}
+
+% A really compact enumeration:
+\newenvironment{myitemize}
+{\begin{itemize}[leftmargin=.3cm]
+	\setlength{\itemsep}{0pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}     }
+{ \end{itemize}                  }
+
