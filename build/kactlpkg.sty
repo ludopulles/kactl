@@ -2,32 +2,19 @@
 % Written by Håkan Terelius, 2008-11-24
 \ProvidesPackage{kactlpkg}
 
-\usepackage[utf8]{inputenc}             % Encoding UTF-8
+\usepackage{amsmath, amsthm, amssymb, amsfonts,booktabs,caption,color,courier}
+\usepackage{datetime,enumitem,fancyhdr,float,fullpage,graphicx,latexsym}
+\usepackage{listings,multicol,parcolumns,subcaption,textcomp,titling,upquote}
+\usepackage{verbatim,wrapfig}
+\usepackage{braket} % \set{}
 
-\usepackage{listings}                   % Source code listings
-\usepackage{framed}                     % Source code listings
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 
-% See https://ctan.org/tex-archive/macros/latex/contrib/minted/
-% for installation instructions and the manual
-\usepackage{minted}                     % Source code listings
+\usepackage[top=1cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
 
-\usepackage[a4paper,landscape,hmargin={0.5cm,0.5cm},vmargin={1.0cm,0.4cm}]{geometry}
-\usepackage{multicol}                   % Split page in multiple columns
-\usepackage{fancyhdr}                   % Fancy headers
-\usepackage{amsbsy, amssymb, amsmath}   % Enable math symbols
-\usepackage{braket}                     % \set{ | }
-\usepackage{tocloft}                    % Custom Table of Contents
-\usepackage{titletoc}                   % Design control over Table of Contents
-\usepackage{ifthen}                     % To enable some conditional programming in LaTeX
-\usepackage{courier}                    % To get bold typewriter typeface
-\usepackage{graphicx}                   % To rotate page numbers
-\usepackage{fix-cm}                     % Large font sizes
-\usepackage{paralist}                   % For compact enumerations
-\usepackage[inline]{enumitem}           % For horizontal lists
-\usepackage[parfill]{parskip}           % For compact enumerations
-\usepackage[dvipsnames]{xcolor}
-\usepackage[normalem]{ulem}
-
+\usepackage{minted}
 % Config commands
 \newcommand{\subtitle}[1]{
 	\def\@subtitle{#1}
@@ -75,74 +62,22 @@
 % actual processing in Python, stashing global state in header.tmp.
 \newmarks\hdrmark
 \pagestyle{fancy}
+
+\setlength{\headheight}{15.2pt}
+\setlength{\droptitle}{-20pt}
+\posttitle{\par\end{center}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
 \renewcommand{\headrulewidth}{0pt}
 \headheight 25pt
 \lhead{\@unishort}
 \chead{\hspace{3mm}\textbf{\immediate\write18{python2 kactlprocessor.py --print-header "\splitbotmarks\hdrmark|\botmarks\hdrmark" -o header2.tmp}\immediate\input{header2.tmp}}}
-\rhead{\thepage}
-%\lhead{}\chead{\thepage}\rhead{}
+\rhead{\thepage / \pageref{LastPage}}
 \lfoot{}\cfoot{}\rfoot{}
 \fancyheadoffset{0pt}
 \fancyfootoffset{0pt}
 \setlength\headsep{5pt}
-
-\renewcommand\chapter{
-	\global\@topnum\z@
-	\secdef
-	\@chapter
-	\@schapter
-}
-
-% Don't add appendices to the Table of Contents
-% Currently, this disables parts of the local TOC for appendices chapters
-\newboolean{appendixmode}
-\setboolean{appendixmode}{false}
-\let\Oldaddtoc\addcontentsline
-\renewcommand{\addcontentsline}[3]{
-	\ifthenelse{
-		\boolean{appendixmode}\and\equal{#1}{toc}
-	}{}{\Oldaddtoc{#1}{#2}{#3}}
-}
-
-% Redefine appendix
-\renewcommand\appendix{
-	% Change chapter counter to A,B,C,...
-	\setcounter{tocdepth}{8}
-	\setcounter{chapter}{0}
-	\def\thechapter{\Alph{chapter}}
-	% Switch to appendixmode defined above (disables TOC entries)
-	\setboolean{appendixmode}{true}
-	\clearpage
-}
-
-\def\@makechapterhead#1{
-
-	\parindent \z@ \raggedright \normalfont
-		\interlinepenalty\@M
-	{\underline{\Large \bfseries #1} }
-	\ifnum \c@secnumdepth >\m@ne
-		{\Large\bfseries (\thechapter) \par\nobreak }
-	\fi
-	\startcontents[chapters]
-}
-
-% Configure source code listings
-\lstset{language=C++}
-\lstset{morekeywords={alignas,alignof}}
-\lstset{frame=t}
-\lstset{tabsize=2}
-\lstset{showstringspaces=false}
-\lstset{breaklines=true}
-\lstset{basicstyle=\scriptsize\ttfamily}
-\lstset{commentstyle=\normalfont\itshape}
-\lstset{literate={^}{\caret}{1}}
-\lstset{literate={~}{\tilde}{1}}
-\lstset{emptylines=*1}
-\lstset{inputencoding=utf8}
-\lstset{aboveskip=3pt}
-\lstset{belowskip=2pt}
-
-\lstdefinelanguage{raw}{} % Raw language, no keywords.
 
 % Configure minted (parameter: language) (see section 6 of minted manual)
 \newminted{cpp}{fontsize=\small,breaklines,tabsize=2}
@@ -179,15 +114,11 @@
 }
 
 \newcommand{\kactlref}[1]{
-	\ifthenelse{\boolean{appendixmode}}{}{
-		\ifnum \value{section} > 0
-			\addcontentsline{ptc}{subsection}{\texttt{#1}\hspace{0.2em}}
-		\else
-			\addcontentsline{ptc}{section}{\texttt{#1}\hspace{0.2em}}
-		\fi
-	}
+	\addcontentsline{ptc}{subsection}{\texttt{#1}\hspace{0.2em}}
 	\marks\hdrmark{#1}
 }
+
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}}
 
 % Like \needspace, except with flush bottoms.
 \newcommand{\myneedspace}[1]{%
