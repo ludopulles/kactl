@@ -11,7 +11,7 @@ The wrong position will be returned if P is Point<int> and the intersection poin
 Products of three coordinates are used in intermediate steps so watch out for overflow if using int or long long.
 Use segmentIntersectionQ to get just a true/false answer.
 \end{minipage}
-\begin{minipage}{15mm}
+\begin{minipage}{14mm}
 \includegraphics[width=\textwidth]{../content/geometry/SegmentIntersection}
 \end{minipage}
  * Status: Well tested with unitTest and with Kattis problem intersection.
