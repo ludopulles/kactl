@@ -61,9 +61,9 @@ void dela(A& v, F f) {
 int main1() {
 	srand(2);
 	feenableexcept(29);
-	rep(it,0,30000000) {{
+	rep(it,0,300) {{
 		bumpalloc.reset();
-		if (it % 200 == 0) cerr << endl;
+		// if (it % 200 == 0) cerr << endl;
 		vector<P> ps;
 		int N = rand() % 20 + 1;
 		int xrange = rand() % 50 + 1;
@@ -85,15 +85,24 @@ int main1() {
 
 		rep(i,0,N) rep(j,0,i) {
 			// identical
-			if (ps[i] == ps[j]) { cerr << '#'; goto fail; }
+			if (ps[i] == ps[j]) {
+				// cerr << '#';
+				goto fail;
+			}
 		}
 		if (false) rep(i,0,N) rep(j,0,i) rep(k,0,j) {
 			// colinear
-			if (ps[i].cross(ps[j], ps[k]) == 0) { cerr << ','; goto fail; }
+			if (ps[i].cross(ps[j], ps[k]) == 0) {
+				// cerr << ',';
+				goto fail;
+			}
 		}
 		if (false) rep(i,0,N) rep(j,0,i) rep(k,0,j) rep(l,0,k) {
 			// concyclic
-			if (coc(i,j,k,l) || coc(i,j,l,k) || coc(i,l,j,k) || coc(i,l,k,j)) { cerr << '?'; goto fail; }
+			if (coc(i,j,k,l) || coc(i,j,l,k) || coc(i,l,j,k) || coc(i,l,k,j)) {
+				// cerr << '?';
+				goto fail;
+			}
 		}
 
 		bool allColinear = true;
@@ -141,11 +150,11 @@ int main1() {
 		ll ar2 = polygonArea2(hull);
 		if (ar2 != sumar) fail();
 
-		cerr << '.';
+		// cerr << '.';
 		continue; }
 fail:;
 	}
-	cerr << endl;
+	// cerr << endl;
 	return 0;
 }
 

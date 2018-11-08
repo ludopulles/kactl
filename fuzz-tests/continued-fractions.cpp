@@ -23,7 +23,7 @@ int main() {
 		sort(all(v));
 		map<double, pii> actual(all(v));
 
-		rep(iter,0,100000) {
+		rep(iter,0,100) {
 			double x = rand() / (RAND_MAX + 1.0) * 3;
 			if (rand() % 2 == 0) x = (rand() % (3*n)) / (double)(rand() % (3*n) + 1);
 			auto pa = approximate(x, n);
