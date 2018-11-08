@@ -43,8 +43,8 @@ void compare() {
 					ll a = modsum(to, c, k, m);
 					ll b = modsum_naive(to, c, k, m);
 					if (a != b) {
-						cout << "differ! " << to << ' ' << c << ' ' << k << ' ' << m << ": " << a << " vs " << b << endl;
-						return;
+						cerr << "differ! " << to << ' ' << c << ' ' << k << ' ' << m << ": " << a << " vs " << b << endl;
+						assert(false);
 					}
 				}
 			}
@@ -60,8 +60,8 @@ void compare2() {
 					ll a = divsum(to, c, k, m);
 					ll b = divsum_naive(to, c, k, m);
 					if (a != b) {
-						cout << "differ! " << to << ' ' << c << ' ' << k << ' ' << m << ": " << a << " vs " << b << endl;
-						return;
+						cerr << "differ! " << to << ' ' << c << ' ' << k << ' ' << m << ": " << a << " vs " << b << endl;
+						assert(false);
 					}
 				}
 			}
@@ -70,19 +70,26 @@ void compare2() {
 }
 
 int main() {
-	compare(); compare2();
-	cout << modsum((ll)1e18, 1, 2, 3) << endl;
-	cout << (ll)1e18 << endl;
-	rep(i,0,50) {
+	srand(3987298763);
+
+	compare();
+	compare2();
+
+	ll bigto = (ll)1e18;
+	assert(modsum(bigto, 1, 2, 3) == bigto);
+
+	rep(i, 0, 50) {
 		ll t = (ll)rand() << 3;
 		ll c = (ll)rand() << 2;
 		ll k = (ll)rand() << 2;
 		ll m = (ll)rand() >> 2;
-		cout << modsum(t, c, k, m) / (long double)(m/2 * t) << endl;
+
+		long double quot = modsum(t, c, k, m) / (long double)(m/2 * t);
+		assert(fabs(quot - 1.0) < 1e-5);
+		// cout << quot << endl;
 	}
-	cout << modsum(1000000000000000000LL, 11231, 102917231231LL, 1236712312LL) << endl;
-	// rep(i,0,1000000) {
-		// modsum(1000000000000000000LL, 11231, 102917231231LL, 1236712312LL);
-	// }
+	ll expected = 8549723678927811368;
+	ll found = modsum(1000000000000000000LL, 11231, 102917231231LL, 1236712312LL);
+	assert(expected == found);
 	return 0;
 }
