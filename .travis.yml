@@ -1,0 +1,5 @@
+language: cpp
+compiler: g++
+dist: xenial
+os: linux
+script: ./run_all_tests.sh
