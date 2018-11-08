@@ -14,6 +14,8 @@ typedef vector<int> vi;
 
 const int maxtests = 10000;
 
+#define TEST(s, e) assert(((void) s, e))
+
 #define TESTMOD(m) { rep(_,0,maxtests) { \
 			ll a = rand() % (m), b = rand() % (m); \
 			if (maxtests < 100) \
@@ -21,21 +23,21 @@ const int maxtests = 10000;
 				b = ((_ % 10) + (m) - 5) % (m); \
 			Mod<(m)> ma(a), mb(b); \
 			Mod<(m)> addsub = ma - mb + ma + mb - ma; \
-			assert(("add and subtract", addsub.x == ma.x)); \
+			TEST("add and subtract", addsub.x == ma.x); \
 			if (b == 0LL) continue; \
 			Mod<(m)> mc = ma / mb; \
-			assert(("check division", (mc * mb).x == a)); \
+			TEST("check division", (mc * mb).x == a); \
 			mc = mc * mb; \
-			assert(("check going back", mc.x == ma.x)); \
+			TEST("check going back", mc.x == ma.x); \
 			mc = mc + Mod<(m)>(135); \
 			Mod<(m)> found = mc * (mb * mb) * mb / mb / (mb * mb); \
-			assert(("check lots", found.x == mc.x)); \
+			TEST("check lots", found.x == mc.x); \
 		} \
 		Mod<(m)> base = 2; \
 		ll expected = 1; \
 		rep(i, 0, 100) { \
 			Mod<(m)> actual = base ^ i; \
-			assert(("check power", actual.x == expected)); \
+			TEST("check power", actual.x == expected); \
 			expected = (expected + expected) % (m); \
 		} \
 	}
