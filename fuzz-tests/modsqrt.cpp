@@ -11,6 +11,7 @@ typedef pair<int, int> pii;
 typedef vector<int> vi;
 
 ll modpow(ll a, ll e, ll mod) {
+	assert(e >= 0);
 	if (e == 0) return 1;
 	ll x = modpow(a * a % mod, e >> 1, mod);
 	return e & 1 ? x * a % mod : x;
@@ -18,15 +19,21 @@ ll modpow(ll a, ll e, ll mod) {
 
 #include "../content/number-theory/ModSqrt.h"
 
+const int MAXN = 10 * 1000;
+bitset<MAXN> isprime;
+
 int main() {
-	rep(p,2,10000) {
-		rep(i,2,p) if (p % i == 0) goto next;
-		rep(a,0,p) {
-			if (p != 2 && modpow(a, (p-1)/2, p) == p-1) continue;
-			ll x = sqrt(a, p);
-			assert(0 <= x && x < p);
-			assert(x * x % p == a);
+	isprime.set();
+	rep(p, 2, MAXN) {
+		if (!isprime.test(p)) continue;
+
+		// unset all multiples of p
+		for (int j = p * p; j < MAXN; j += p) isprime.set(j, false);
+
+		rep(a, 0, p) {
+			int sq = a * a % p;
+			ll found = sqrt(sq, p);
+			assert(0 <= found && found < p && (found == a || found == p - a));
 		}
-next:;
 	}
 }
