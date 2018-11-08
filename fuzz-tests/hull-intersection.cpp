@@ -78,7 +78,7 @@ int segmentIntersection(const P& s1, const P& e1,
 int main() {
 	srand(2);
 	rep(it,0,1000000) {
-		if (it % 100 == 0) cerr << '.';
+		// if (it % 100 == 0) cerr << '.';
 		int N = rand() % 15;
 		vector<P> ps, ps2;
 		rep(i,0,N) ps2.emplace_back(rand() % 20 - 10, rand() % 20 - 10);
