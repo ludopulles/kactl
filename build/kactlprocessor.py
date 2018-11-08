@@ -5,6 +5,7 @@
 # Written by Håkan Terelius, 2008-11-24
 
 from __future__ import print_function
+import hashlib
 import sys
 import getopt
 
@@ -129,6 +130,14 @@ def processwithcomments(caption, instream, outstream, lang = 'cpp'):
     else:
         caption = pathescape(caption).strip()
         out.append(r"\kactlref{%s}" % caption)
+
+        # Make a SHA1-hash of the source code and add a newline before hashing this.
+        # Then, take the hexadecimal-version, and turn this into a string.
+        sha1_hash = hashlib.sha1(nsource + "\n").hexdigest()
+
+        with open('hashcheck', 'a') as f:
+            f.write(nsource + "\n")
+            f.write("HASH: " + sha1_hash)
         with open('header.tmp', 'a') as f:
             f.write(caption + "\n")
         if commands.get("Description"):
@@ -142,7 +151,7 @@ def processwithcomments(caption, instream, outstream, lang = 'cpp'):
         if includelist:
             out.append(r"\leftcaption{%s}" % pathescape(", ".join(includelist)))
         if nsource:
-            out.append(r"\rightcaption{%d lines}" % len(nsource.split("\n")))
+            out.append(r"\rightcaption{SHA1: \texttt{%s} ; %d lines}" % (sha1_hash, len(nsource.split("\n"))))
         out.append("\makecaption{%s}\n\\begin{%scode}" % (caption, lang))
         out.append(nsource)
         out.append(r"\end{%scode}" % lang)
