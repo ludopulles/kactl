@@ -249,25 +249,27 @@ def main():
         if print_header_value is not None:
             print_header(print_header_value, outstream)
             return
-        print(" * \x1b[1m{}\x1b[0m".format(caption))
-        if language == "cpp" or language == "cc" or language == "c" or language == "h" or language == "hpp":
-            processwithcomments(caption, instream, outstream)
-        elif language == "java":
-            processwithcomments(caption, instream, outstream)
-        elif language == "ps":
-            processraw(caption, instream, outstream) # PostScript was added in listings v1.4
-        elif language == "raw":
-            processraw(caption, instream, outstream)
-        elif language == "rawcpp":
-            processraw(caption, instream, outstream, 'cpp')
-        elif language == "rawvim":
-            processraw(caption, instream, outstream, 'vim')
-        elif language == "sh":
-            processraw(caption, instream, outstream, 'bash')
-        elif language == "py":
-            processraw(caption, instream, outstream, 'python')
+        print(" * \x1b[1m{}\x1b[0m\n".format(caption))
+
+        aliases = {
+            'cpp': 'cpp', 'cc': 'cpp', 'c': 'cpp', 'h': 'cpp', 'hpp': 'cpp',
+            'java': 'java',
+            'bash': 'bash', 'sh': 'bash',
+            'python': 'python', 'py': 'python',
+            'vim': 'vim',
+        }
+
+        if language.startswith('raw'):
+            language = language[3:]
+            if not aliases.get(language):
+                raise ValueError("Unknown language: " + str(language))
+            language = aliases.get(language)
+            processraw(caption, instream, outstream, language)
         else:
-            raise ValueError("Unknown language: " + str(language))
+            if not aliases.get(language):
+                raise ValueError("Unknown language: " + str(language))
+            language = aliases.get(language)
+            processwithcomments(caption, instream, outstream, language)
     except (ValueError, getopt.GetoptError, IOError) as err:
         print(str(err), file=sys.stderr)
         print("\t for help use --help", file=sys.stderr)
