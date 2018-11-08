@@ -10,17 +10,16 @@
 
 #include "euclid.h"
 
-const ll mod = 17; // change to something else
-struct Mod {
+template<ll M> struct Mod {
 	ll x;
-	Mod(ll xx) : x(xx) {}
-	Mod operator+(Mod b) { return Mod((x + b.x) % mod); }
-	Mod operator-(Mod b) { return Mod((x - b.x + mod) % mod); }
-	Mod operator*(Mod b) { return Mod((x * b.x) % mod); }
+	Mod(ll xx) : x(((xx%M)+M)%M) {}
+	Mod operator+(Mod b) { return Mod((x + b.x) % M); }
+	Mod operator-(Mod b) { return Mod((x - b.x + M) % M); }
+	Mod operator*(Mod b) { return Mod((x * b.x) % M); }
 	Mod operator/(Mod b) { return *this * invert(b); }
 	Mod invert(Mod a) {
-		ll x, y, g = euclid(a.x, mod, x, y);
-		assert(g == 1); return Mod((x + mod) % mod);
+		ll i, y; assert(euclid(a.x, M, i, y) == 1);
+		return Mod((i + M) % M);
 	}
 	Mod operator^(ll e) {
 		if (!e) return Mod(1);
