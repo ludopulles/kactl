@@ -4,15 +4,15 @@
  * License: CC0
  * Source: own work
  * Description: Various self-explanatory methods for string hashing.
+ * Arithmetic mod $2^{64} - 1$. 2x slower than mod $2^{64}$ and more
+ * code, but works on evil test data (e.g. Thue-Morse, where
+ * ``ABBA\dots'' and ``BAAB\dots'' of length $2^{10}$ hash the same mod $2^{64}$).
+ * \texttt{typedef ull H;} instead if you think test data is random,
+ * or work mod $10^9 + 7$ if the Birthday paradox is not a problem.
  * Status: tested
  */
 #pragma once
 
-// Arithmetic mod 2^64-1. 2x slower than mod 2^64 and more
-// code, but works on evil test data (e.g. Thue-Morse, where
-// ABBA... and BAAB... of length 2^10 hash the same mod 2^64).
-// "typedef ull H;" instead if you think test data is random,
-// or work mod 10^9+7 if the Birthday paradox is not a problem.
 struct H {
 	typedef uint64_t ull;
 	ull x; H(ull x=0) : x(x) {}
