@@ -2,25 +2,27 @@
 % Written by Håkan Terelius, 2008-11-24
 \ProvidesPackage{kactlpkg}
 
-\usepackage[utf8]{inputenc}             % Encoding UTF-8
-\usepackage{listings}                   % Source code listings
-\usepackage{framed}                     % Source code listings
-\usepackage[a4paper,landscape,hmargin={0.5cm,0.5cm},vmargin={1.0cm,0.4cm}]{geometry}
-\usepackage{multicol}                   % Split page in multiple columns
-\usepackage{fancyhdr}                   % Fancy headers
-\usepackage{amsbsy, amssymb, amsmath}   % Enable math symbols
-\usepackage{braket}                     % \set{ | }
-\usepackage{tocloft}                    % Custom Table of Contents
-\usepackage{titletoc}                   % Design control over Table of Contents
-\usepackage{ifthen}                     % To enable some conditional programming in LaTeX
-\usepackage{courier}                    % To get bold typewriter typeface
-\usepackage{graphicx}                   % To rotate page numbers
-\usepackage{fix-cm}                     % Large font sizes
-\usepackage{paralist}                   % For compact enumerations
-\usepackage[inline]{enumitem}           % For horizontal lists
-\usepackage[parfill]{parskip}           % For compact enumerations
-\usepackage[dvipsnames]{xcolor}
-\usepackage[normalem]{ulem}
+\usepackage{amsmath,amsthm,amssymb,amsfonts,braket,booktabs,caption,color}
+\usepackage{datetime,enumitem,fancyhdr,float,fullpage,graphicx,latexsym}
+\usepackage{listings,multicol,parcolumns,subcaption,textcomp,titling,upquote}
+\usepackage{verbatim,wrapfig}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+
+\usepackage[top=1cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{minted}
+
+% Math and bit operators
+\DeclareMathOperator{\lcm}{lcm}
+\newcommand*\BitAnd{\mathrel{\&}}
+\newcommand*\BitOr{\mathrel{|}}
+\newcommand*\ShiftLeft{\ll}
+\newcommand*\ShiftRight{\gg}
+\newcommand*\BitNeg{\ensuremath{\mathord{\sim}}}
+\DeclareRobustCommand{\stirling}{\genfrac\{\}{0pt}{}}
 
 % Config commands
 \newcommand{\subtitle}[1]{
@@ -69,115 +71,30 @@
 % actual processing in Python, stashing global state in header.tmp.
 \newmarks\hdrmark
 \pagestyle{fancy}
+
+\setlength{\headheight}{15.2pt}
+\setlength{\droptitle}{-20pt}
+\posttitle{\par\end{center}}
+\renewcommand{\footrulewidth}{0.4pt}
+
 \renewcommand{\headrulewidth}{0pt}
 \headheight 25pt
 \lhead{\@unishort}
 \chead{\hspace{3mm}\textbf{\immediate\write18{python2 kactlprocessor.py --print-header "\splitbotmarks\hdrmark|\botmarks\hdrmark" -o header2.tmp}\immediate\input{header2.tmp}}}
-\rhead{\thepage}
-%\lhead{}\chead{\thepage}\rhead{}
+\rhead{\thepage / \pageref{LastPage}}
 \lfoot{}\cfoot{}\rfoot{}
 \fancyheadoffset{0pt}
 \fancyfootoffset{0pt}
 \setlength\headsep{5pt}
 
-\renewcommand\chapter{
-	\global\@topnum\z@
-	\secdef
-	\@chapter
-	\@schapter
-}
+% Configure minted (parameter: language) (see section 6 of minted manual)
+\newminted{cpp}{fontsize=\small,breaklines,tabsize=2}
+\newminted{vim}{fontsize=\small,breaklines,tabsize=2}
+\newminted{bash}{fontsize=\small,breaklines,tabsize=2}
+\newminted{java}{fontsize=\small,breaklines,tabsize=2}
+% Now, the environment cppcode is defined.
 
-% Don't add appendices to the Table of Contents
-% Currently, this disables parts of the local TOC for appendices chapters
-\newboolean{appendixmode}
-\setboolean{appendixmode}{false}
-\let\Oldaddtoc\addcontentsline
-\renewcommand{\addcontentsline}[3]{
-	\ifthenelse{
-		\boolean{appendixmode}\and\equal{#1}{toc}
-	}{}{\Oldaddtoc{#1}{#2}{#3}}
-}
-
-% Redefine appendix
-\renewcommand\appendix{
-	% Change chapter counter to A,B,C,...
-	\setcounter{tocdepth}{8}
-	\setcounter{chapter}{0}
-	\def\thechapter{\Alph{chapter}}
-	% Switch to appendixmode defined above (disables TOC entries)
-	\setboolean{appendixmode}{true}
-	\clearpage
-}
-
-\def\@makechapterhead#1{
-
-	\parindent \z@ \raggedright \normalfont
-		\interlinepenalty\@M
-	{\underline{\Large \bfseries #1} }
-	\ifnum \c@secnumdepth >\m@ne
-		{\Large\bfseries (\thechapter) \par\nobreak }
-	\fi
-	\startcontents[chapters]
-}
-
-\renewcommand\section{\@startsection {section}{1}{\z@}%
-                                   {-0.5ex \@plus -1ex \@minus -.2ex}%
-                                   {.4ex}%
-                                   {\normalfont\large\bfseries}}
-
-\renewcommand\subsection{\@startsection{subsection}{2}{\z@}
-	{1ex\@plus -1ex \@minus -.3ex}
-	{.2ex}
-	{\normalfont\bfseries}}
-
-\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}
-	{1ex\@plus -1ex \@minus -.3ex}
-	{1ex \@plus .2ex}
-	{\normalfont\normalsize\bfseries}}
-
-% Styles for local toc
-\titlecontents{localsection}[1.5em]{\footnotesize}{}
-	{\footnotesize}{\titlerule*[0.8em]{.}\contentspage}
-\titlecontents{localsubsection}[3.8em]{\footnotesize}{}
-	{\footnotesize}{\titlerule*[0.8em]{.}\contentspage}
-
-% Styles for main toc
-\renewcommand{\chaptermark}[1]{\markboth{\emph{ #1}}{}}
-\renewcommand{\cftbeforetoctitleskip}{-50pt}
-\renewcommand{\cftaftertoctitleskip}{10pt}
-\renewcommand{\cftbeforechapskip}{10pt}
-\renewcommand{\cftdotsep}{4.5}
-
-% Proper carets and tildes
-\newcommand*{\caret}{%
-  \begingroup
-    \fontencoding{T1}%
-    \fontfamily{pcr}% Courier
-    \selectfont
-    \string^%
-  \endgroup
-}
-\renewcommand*{\tilde}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}
-
-% Configure source code listings
-\lstset{language=C++}
-\lstset{morekeywords={alignas,alignof}}
-\lstset{frame=t}
-\lstset{tabsize=2}
-\lstset{showstringspaces=false}
-\lstset{breaklines=true}
-\lstset{basicstyle=\scriptsize\ttfamily}
-\lstset{commentstyle=\normalfont\itshape}
-\lstset{literate={^}{\caret}{1}}
-\lstset{literate={~}{\tilde}{1}}
-\lstset{emptylines=*1}
-\lstset{inputencoding=utf8}
-\lstset{aboveskip=3pt}
-\lstset{belowskip=2pt}
-
-\lstdefinelanguage{raw}{} % Raw language, no keywords.
-
-\setlength{\columnseprule}{0.5pt} % Multicol separation line with
+\setlength{\columnseprule}{0.5pt} % Multicol separation line width
 \setlength{\columnsep}{10pt} % Multicol separation margin
 \setcounter{tocdepth}{1} % Table of contents depth
 
@@ -205,15 +122,11 @@
 }
 
 \newcommand{\kactlref}[1]{
-	\ifthenelse{\boolean{appendixmode}}{}{
-		\ifnum \value{section} > 0
-			\addcontentsline{ptc}{subsection}{\texttt{#1}\hspace{0.2em}}
-		\else
-			\addcontentsline{ptc}{section}{\texttt{#1}\hspace{0.2em}}
-		\fi
-	}
+	\addcontentsline{ptc}{subsection}{\texttt{#1}\hspace{0.2em}}
 	\marks\hdrmark{#1}
 }
+
+\newcommand{\subsubsubsection}[1]{\paragraph{#1}}
 
 % Like \needspace, except with flush bottoms.
 \newcommand{\myneedspace}[1]{%
@@ -235,7 +148,6 @@
 	\setboolean{hasleftcaption}{false}
 	\myneedspace{3\baselineskip}
 	\penalty-100
-	#2
 	\immediate\write18{rm -f kactl.tmp} % Don't include old kactl.tmp on failure.
 	\immediate\write18{python2 kactlprocessor.py -i "\@kactldir/#2" -o kactl.tmp #1}
 	\immediate\input{kactl.tmp}
@@ -315,15 +227,16 @@
 	{\par\noindent\scriptsize{\textbf{#1:} #2\par}}
 }
 
-\long\def\@makecaption#1#2{
-	\vspace{-3pt}
+\newcommand{\makecaption}[1]{
+	\begin{center} \textbf{#1}\end{center}
 	\ifthenelse{\boolean{hasdescription}}{\codeheader{Description}{\@defdescription}}{}
 	\ifthenelse{\boolean{hasusage}}{\codeheader{Usage}{\@defusage}}{}
 	\ifthenelse{\boolean{hasmemory}}{\codeheader{Memory}{\@defmemory}}{}
 	\ifthenelse{\boolean{hastime}}{\codeheader{Time}{\@deftime}}{}
 	\ifthenelse{\boolean{hasleftcaption}}{\vspace{0pt}}{\vspace{-5pt}}
-	\tiny
-	\texttt{\@leftcaption} \hfill \@rightcaption
+	{ \tiny \texttt{\@leftcaption} \hfill \@rightcaption }
+	\vspace{.15em}
+	\hrule
 }
 
 \newcommand{\bigo}[1] {\ensuremath{\mathcal{O} \left( #1 \right)}}

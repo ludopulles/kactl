@@ -7,7 +7,7 @@
 \begin{minipage}{75mm}
  Returns a vector with the vertices of a polygon with everything to the left of the line going from s to e cut away.
 \end{minipage}
-\begin{minipage}{15mm}
+\begin{minipage}{14mm}
 \vspace{-6mm}
 \includegraphics[width=\textwidth]{../content/geometry/PolygonCut}
 \vspace{-6mm}

@@ -7,7 +7,7 @@
 \begin{minipage}{75mm}
 The circumcirle of a triangle is the circle intersecting all three vertices. ccRadius returns the radius of the circle going through points A, B and C and ccCenter returns the center of the same circle.
 \end{minipage}
-\begin{minipage}{15mm}
+\begin{minipage}{14mm}
 \vspace{-2mm}
 \includegraphics[width=\textwidth]{../content/geometry/circumcircle}
 \end{minipage}

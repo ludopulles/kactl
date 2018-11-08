@@ -46,13 +46,7 @@ def ordoescape(input, esc=True):
             return r"%s\bigo{%s}%s" % (input[:start], input[start+2:end], ordoescape(input[end+1:], False))
     return input
 
-def addref(caption, outstream):
-    caption = pathescape(caption).strip()
-    print(r"\kactlref{%s}" % caption, file=outstream)
-    with open('header.tmp', 'a') as f:
-        f.write(caption + "\n")
-
-def processwithcomments(caption, instream, outstream, listingslang = None):
+def processwithcomments(caption, instream, outstream, lang = 'cpp'):
     knowncommands = ['Author', 'Date', 'Description', 'Source', 'Time', 'Memory', 'License', 'Status', 'Usage']
     requiredcommands = ['Author', 'Description']
     includelist = []
@@ -133,7 +127,10 @@ def processwithcomments(caption, instream, outstream, listingslang = None):
     if error:
         out.append(r"\kactlerror{%s: %s}" % (caption, error))
     else:
-        addref(caption, outstream)
+        caption = pathescape(caption).strip()
+        out.append(r"\kactlref{%s}" % caption)
+        with open('header.tmp', 'a') as f:
+            f.write(caption + "\n")
         if commands.get("Description"):
             out.append(r"\defdescription{%s}" % escape(commands["Description"]))
         if commands.get("Usage"):
@@ -146,22 +143,31 @@ def processwithcomments(caption, instream, outstream, listingslang = None):
             out.append(r"\leftcaption{%s}" % pathescape(", ".join(includelist)))
         if nsource:
             out.append(r"\rightcaption{%d lines}" % len(nsource.split("\n")))
-        langstr = ", language="+listingslang if listingslang else ""
-        out.append(r"\begin{lstlisting}[caption={%s}%s]" % (pathescape(caption), langstr))
+        out.append("\makecaption{%s}\n\\begin{%scode}" % (caption, lang))
         out.append(nsource)
-        out.append(r"\end{lstlisting}")
+        out.append(r"\end{%scode}" % lang)
 
     for line in out:
         print(line, file=outstream)
 
-def processraw(caption, instream, outstream, listingslang = 'raw'):
+def processraw(caption, instream, outstream, lang = 'raw'):
     try:
         source = instream.read().strip()
-        addref(caption, outstream)
+        caption = pathescape(caption).strip()
+        print(r"\kactlref{%s}" % caption, file=outstream)
+        with open('header.tmp', 'a') as f:
+            f.write(caption + "\n")
         print(r"\rightcaption{%d lines}" % len(source.split("\n")), file=outstream)
-        print(r"\begin{lstlisting}[language=%s,caption={%s}]" % (listingslang, pathescape(caption)), file=outstream)
-        print(source, file=outstream)
-        print(r"\end{lstlisting}", file=outstream)
+        if lang == 'raw':
+            # not used anymore, if I'm not mistaken...
+            print(r"\begin{lstlisting}[language=raw,caption={%s}]" % pathescape(caption), file=outstream)
+            print(source, file=outstream)
+            print(r"\end{lstlisting}", file=outstream)
+        else:
+            env = lang + 'code'
+            print("\makecaption{%s}\n\\begin{%s}" % (caption, env), file=outstream)
+            print(source, file=outstream)
+            print(r"\end{%s}" % env, file=outstream)
     except:
         print("\kactlerror{Could not read source.}", file=outstream)
 
@@ -238,19 +244,21 @@ def main():
         if language == "cpp" or language == "cc" or language == "c" or language == "h" or language == "hpp":
             processwithcomments(caption, instream, outstream)
         elif language == "java":
-            processwithcomments(caption, instream, outstream, 'Java')
+            processwithcomments(caption, instream, outstream)
         elif language == "ps":
             processraw(caption, instream, outstream) # PostScript was added in listings v1.4
         elif language == "raw":
             processraw(caption, instream, outstream)
         elif language == "rawcpp":
-            processraw(caption, instream, outstream, 'C++')
+            processraw(caption, instream, outstream, 'cpp')
+        elif language == "rawvim":
+            processraw(caption, instream, outstream, 'vim')
         elif language == "sh":
             processraw(caption, instream, outstream, 'bash')
         elif language == "py":
-            processraw(caption, instream, outstream, 'Python')
+            processraw(caption, instream, outstream, 'python')
         else:
-            raise ValueError("Unkown language: " + str(language))
+            raise ValueError("Unknown language: " + str(language))
     except (ValueError, getopt.GetoptError, IOError) as err:
         print(str(err), file=sys.stderr)
         print("\t for help use --help", file=sys.stderr)
