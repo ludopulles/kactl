@@ -77,6 +77,8 @@ int ra() {
 }
 
 int main() {
+	cout << "WARNING: this code does not use the code from the PDF directly..." << endl;
+
 	ll res = 0, res2 = 0;
 	int ind = 0, ind2 = 0;
 	vl a, b;
