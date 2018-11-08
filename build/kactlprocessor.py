@@ -151,7 +151,7 @@ def processwithcomments(caption, instream, outstream, lang = 'cpp'):
         if includelist:
             out.append(r"\leftcaption{%s}" % pathescape(", ".join(includelist)))
         if nsource:
-            out.append(r"\rightcaption{SHA1: \texttt{%s} ; %d lines}" % (sha1_hash, len(nsource.split("\n"))))
+            out.append(r"\rightcaption{SHA1: \texttt{%s}, %d lines}" % (sha1_hash, len(nsource.split("\n"))))
         out.append("\makecaption{%s}\n\\begin{%scode}" % (caption, lang))
         out.append(nsource)
         out.append(r"\end{%scode}" % lang)
