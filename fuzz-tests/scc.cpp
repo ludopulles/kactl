@@ -49,6 +49,8 @@ template<class G> vi scc(G &g) {
 }
 
 int main() {
+	cout << "WARNING: only comparing code with old expected behaviour..." << endl;
+
 	unsigned r = 1;
 	for (int N = 0; N <= 5; N++) {
 		cout << "N = " << N << endl;

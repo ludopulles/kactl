@@ -17,12 +17,12 @@ pair<Node*, Node*> split2(Node* n, int v) {
 	if (n->val >= v) {
 		auto pa = split2(n->l, v);
 		n->l = pa.second;
-		recalc(n);
+		n->recalc();
 		return {pa.first, n};
 	} else {
 		auto pa = split2(n->r, v);
 		n->r = pa.first;
-		recalc(n);
+		n->recalc();
 		return {n, pa.second};
 	}
 }
@@ -54,7 +54,7 @@ int main() {
 	}
 
 	rep(it,0,10000) {
-		cerr << '.';
+		// cerr << '.';
 		vector<Node> nodes;
 		vi exp;
 		rep(i,0,10) nodes.emplace_back(i);
@@ -81,6 +81,9 @@ int main() {
 			// cerr << x << ' ';
 			assert(x == exp[ind++]);
 		});
+
+		// check this get actually called...
+		assert(ind > 0);
 		// cerr << endl;
 	}
 }
