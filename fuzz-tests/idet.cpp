@@ -93,6 +93,7 @@ void rec2(int i, vector<ll>& A, F f) {
 }
 
 int main() {
+	cout << "WARNING: THIS IS A BAD TEST AND DOESNT USE THE CODE FROM THE PDF" << endl;
 	rep(n,0,4) {
 		cout << n << endl;
 		vvll mat(n, vector<ll>(n, 0)), mat2;

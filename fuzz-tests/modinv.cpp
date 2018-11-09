@@ -1,14 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-#define rep(i, from, to) for (int i = from; i < int(to); ++i)
-#define trav(a, x) for (auto& a : x)
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)(x).size()
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-
+#include "template-no-main.h"
 const ll M = 1e9+7, LIM = 200000;
 
 bool isPrime(int x) {

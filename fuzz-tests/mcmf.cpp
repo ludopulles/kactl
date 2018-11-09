@@ -1,19 +1,12 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-#define rep(i, a, b) for(int i = a; i < int(b); ++i)
-#define trav(a, v) for(auto& a : v)
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)(x).size()
-
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
+#include "template-no-main.h"
 
 // #include "mcmf3.h"
 // #include "mcmf4.h"
 // #include "mcmfold.h"
 // #include "mcmfnew.h"
+
+// what the ....
+// TODO: you can do this better!
 #define setpi dummy(){} bool setpi
 #undef assert
 #define assert(x) return x
@@ -21,6 +14,9 @@ typedef vector<int> vi;
 #undef assert
 #undef setpi
 #include <cassert>
+
+// Yes, we should not be using this...
+// Why is this in the test directory anyway?
 #include "MinCostMaxFlow2.h"
 
 struct MCMF2 {

@@ -1,19 +1,7 @@
 /**
  * Tests the validity of the link-cut tree, while assuming that the union-find algorithm is valid!
  */
-
-#include <bits/stdc++.h>
-using namespace std;
-
-#define rep(i, a, b) for(int i = a; i < int(b); ++i)
-#define trav(it, v) for(auto& it : v)
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)(x).size()
-
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-
+#include "template-no-main.h"
 #include "../content/graph/LinkCutTree.h"
 #include "../content/data-structures/UnionFind.h"
 
