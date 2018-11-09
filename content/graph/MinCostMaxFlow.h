@@ -26,9 +26,9 @@ struct MCMF {
 	MCMF(int n) : N(n), ed(N), red(N), cap(N, VL(N)), flow(cap),
 		cost(cap), seen(N), dist(N), pi(N), par(N) {}
 
-	void addEdge(int from, int to, ll cap, ll cost) {
-		this->cap[from][to] = cap;
-		this->cost[from][to] = cost;
+	void addEdge(int from, int to, ll ecap, ll ecost) {
+		cap[from][to] = ecap;
+		cost[from][to] = ecost;
 		ed[from].push_back(to);
 		red[to].push_back(from);
 	}
@@ -42,9 +42,9 @@ struct MCMF {
 		vector<decltype(q)::point_iterator> its(N);
 		q.push({0, s});
 
-		auto relax = [&](int i, ll cap, ll cost, int dir) {
-			ll val = di - pi[i] + cost;
-			if (cap && val < dist[i]) {
+		auto relax = [&](int i, ll ecap, ll ecost, int dir) {
+			ll val = di - pi[i] + ecost;
+			if (ecap && val < dist[i]) {
 				dist[i] = val;
 				par[i] = {s, dir};
 				if (its[i] == q.end()) its[i] = q.push({-dist[i], i});

@@ -1,4 +1,9 @@
 #include "template-no-main.h"
+#include "../content/number-theory/eratosthenes.h"
+
+/**
+ * Super fast prime sieve implementation by ?
+ */
 struct prime_sieve {
 	typedef unsigned char uchar;
 	typedef unsigned int uint;
@@ -7,9 +12,9 @@ struct prime_sieve {
 	uchar *isprime;
 	int *prime, primes; // prime[i] is i:th prime
 
-	bool is_prime(int n) { // primality check
-		if(n%2==0 || n<=2) return n==2;
-		return isprime[(n-3)>>4] & 1 << ((n-3) >> 1&7);
+	bool is_prime(int num) { // primality check
+		if(num%2==0 || num<=2) return num==2;
+		return isprime[(num-3)>>4] & 1 << ((num-3) >> 1&7);
 	}
 
 	prime_sieve(int _n) : n(_n), sqrtn((int)ceil(sqrt(1.0*n))) {
@@ -38,42 +43,14 @@ struct prime_sieve {
 						isprime[ii] &= (uchar)~(1<<ss);
 }	}		}	}	};
 
-const int MAX_PR = 100000000;
-
-#if 1
-
-bitset<MAX_PR/2> isprime;
-vi eratosthenes_sieve(int lim) {
-	isprime.set();
-	for (int i = 3; i*i < lim; i += 2) if (isprime[i >> 1])
-		for (int j = i*i; j < lim; j += 2*i) isprime[j >> 1] = 0;
-	vi pr;
-	if (lim >= 2) pr.push_back(2);
-	for (int i = 3; i < lim; i += 2)
-		if (isprime[i>>1]) pr.push_back(i);
-	return pr;
-}
-
-#else
-
-bitset<MAX_PR> isprime;
-vi eratosthenes_sieve(int lim) {
-	isprime.set(); isprime[0] = isprime[1] = 0;
-	for (int i = 4; i < lim; i += 2) isprime[i] = 0;
-	for (int i = 3; i*i < lim; i += 2) if (isprime[i])
-		for (int j = i*i; j < lim; j += i*2) isprime[j] = 0;
-	vi pr;
-	rep(i,2,lim) if (isprime[i]) pr.push_back(i);
-	return pr;
-}
-
-#endif
-
-int main(int argc, char** argv) {
-	ll s = 0, s2 = 0;
+int main() {
 	prime_sieve ps(MAX_PR);
-	rep(i,0,ps.primes) s += ps.prime[i];
-	vi r = eratosthenes_sieve(MAX_PR);
-	trav(x, r) s2 += x;
-	cout << s << ' ' << s2 << endl;
+
+	vi actual = eratosthenes_sieve(MAX_PR);
+
+	assert(sz(actual) == ps.primes);
+	rep(i, 0, ps.primes) {
+		assert(actual[i] == ps.prime[i]);
+	}
+	return 0;
 }

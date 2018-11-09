@@ -58,8 +58,5 @@ bool run()
 }
 
 int main() {
-	rep(_, 0, nruns) {
-		bool result = run();
-		// assert(result);
-	}
+	rep(_, 0, nruns) run();
 }

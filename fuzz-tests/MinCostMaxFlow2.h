@@ -14,8 +14,8 @@ struct FlowEdge {
 	int dest, back;
 	Flow c, f, cost; 
 	Flow r() { return c - f; } 
-	FlowEdge(int d, int b, Flow c, Flow cost = 0)
-		: dest(d), back(b), c(c), f(0), cost(cost) {}
+	FlowEdge(int d, int b, Flow ec, Flow ecost = 0)
+		: dest(d), back(b), c(ec), f(0), cost(ecost) {}
 };
 
 template<class G>
