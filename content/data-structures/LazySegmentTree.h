@@ -18,8 +18,8 @@ const int inf = 1e9;
 struct Node {
 	Node *l = 0, *r = 0;
 	int lo, hi, mset = inf, madd = 0, val = -inf;
-	Node(int lo,int hi):lo(lo),hi(hi){} // Large interval of -inf
-	Node(vi& v, int lo, int hi) : lo(lo), hi(hi) {
+	Node(int _l,int _h):lo(_l),hi(_h){} // Large interval of -inf
+	Node(vi& v, int _l, int _h) : Node(_l, _h) {
 		if (lo + 1 < hi) {
 			int mid = lo + (hi - lo)/2;
 			l = new Node(v, lo, mid); r = new Node(v, mid, hi);

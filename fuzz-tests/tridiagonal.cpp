@@ -334,9 +334,9 @@ int main() {
 	}
 	bool sym = rand() % 3 == 0;
 	rep(i,0,n-1) {
-		double x = nice_double();
-		super[i] = mat[i][i+1] = x;
-		double y = sym ? x : nice_double();
+		double xxx = nice_double();
+		super[i] = mat[i][i+1] = xxx;
+		double y = sym ? xxx : nice_double();
 		sub[i] = mat[i+1][i] = y;
 	}
 #endif
@@ -388,6 +388,7 @@ int main() {
 }
 
 int main() {
+	cout << "WARNING: THIS CODE DOES NOT USE THE PDF-CODE" << endl;
 	// finite_field::main();
 	real::main();
 }
