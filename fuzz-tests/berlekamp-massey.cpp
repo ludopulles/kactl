@@ -1,35 +1,11 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-#define rep(i, a, b) for(int i = a; i < int(b); ++i)
-#define trav(a, v) for(auto& a : v)
-#define all(x) x.begin(), x.end()
-#define sz(x) (int)(x).size()
-
-typedef long long ll;
-typedef pair<int, int> pii;
-typedef vector<int> vi;
-
-const ll mod = 5;
-ll modpow(ll a, ll e) {
-	if (e == 0) return 1;
-	ll x = modpow(a * a % mod, e >> 1);
-	return e & 1 ? x * a % mod : x;
-}
-
-#define mod dummy
-#define modpow dummy2
-#include "../content/number-theory/ModPow.h"
-#undef mod
-#undef modpow
-
+#include "template-no-main.h"
 #include "../content/numerical/BerlekampMassey.h"
 
 template<class F>
 void gen(vector<ll>& v, int at, F f) {
 	if (at == sz(v)) f();
 	else {
-		rep(i,0,mod) {
+		rep(i,0,5) {
 			v[at] = i;
 			gen(v, at+1, f);
 		}
@@ -37,40 +13,35 @@ void gen(vector<ll>& v, int at, F f) {
 }
 
 int main() {
+	// a_n = a_{n-1} + 2a_{n-2}
+	vector<ll> v{0, 1, 1, 3, 5, 11}, rec{ 1LL, 2LL};
+	auto v2 = BerlekampMassey(v);
+	assert(v2 == rec);
+
+	int nequal = 0;
+
 	rep(n,1,5) {
-		cerr << n << endl;
-		vector<ll> start(n);
-		vector<ll> coef(n), coef2;
-		vector<ll> full(2*n);
+		vector<ll> start(n), coef(n), coef2, full(2*n);
 		gen(start, 0, [&]() {
-		gen(coef, 0, [&]() {
-			rep(i,0,n) full[i] = start[i];
-			rep(i,n,2*n) full[i] = 0;
-			rep(i,n,2*n) rep(j,0,n) full[i] = (full[i] + coef[j] * full[i-1 - j]) % mod;
-			coef2 = BerlekampMassey(full);
-// rep(i,0,2*n) cerr << full[i] << ' '; cerr << endl;
-// rep(i,0,n) cerr << coef[i] << ' '; cerr << endl;
-// rep(i,0,sz(coef2)) cerr << coef2[i] << ' '; cerr << endl;
-			if (sz(coef2) == n) assert(coef == coef2);
-// rep(i,0,n) cerr << full[i] << ' ';
-			rep(i,n,2*n) {
-				ll x = 0;
-				rep(j,0,sz(coef2)) x = (x + coef2[j] * full[i-1 - j]) % mod;
-				// cerr << x << ' ';
-				assert(x == full[i]);
-			}
-			// cerr << endl;
-// cerr << endl;
-		});
+			gen(coef, 0, [&]() {
+				rep(i,0,n) full[i] = start[i];
+				rep(i,n,2*n) full[i] = 0;
+				rep(i,n,2*n) rep(j,0,n)
+					full[i] = (full[i] + coef[j] * full[i-1 - j]) % mod;
+				coef2 = BerlekampMassey(full);
+				if (sz(coef2) == n) assert(coef == coef2), nequal++;
+				rep(i,n,2*n) {
+					ll x = 0;
+					rep(j,0,sz(coef2))
+						x = (x + coef2[j] * full[i-1 - j]) % mod;
+					assert(x == full[i]);
+				}
+			});
 		});
 	}
-	return 0;
-}
 
-int main2() {
-	vector<ll> v{0, 1, 1, 3, 5, 11};
-	auto v2 = BerlekampMassey(v);
-	trav(x, v2) cout << x << ' ';
-	cout << endl;
+	// check that this test did not succeed just because it made no assertions (see line 32), but because it actually worked :).
+	assert(nequal >= 1e5);
+
 	return 0;
 }
