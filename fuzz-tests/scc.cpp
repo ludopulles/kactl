@@ -1,90 +1,63 @@
 #include "template-no-main.h"
-
-#define D(x) \
-	cerr << #x << " = " << x << endl
-
 #include "../content/graph/SCC.h"
 
-namespace old {
-vi orig, low, comp, z;
-int no_vertices, no_components;
-template<class G> void dfs(int j, G &g) {
-	low[j] = orig[j] = no_vertices++;
-	comp[j] = -2; z.push_back(j);
-	trav(e,g[j])
-		if (comp[e] == -1) {
-			dfs(e, g);
-			low[j] = min(low[j], low[e]);
-		}
-		else if (comp[e] == -2)
-			low[j] = min(low[j], orig[e]);
+// we have to do a O(N^2) comparison
+const int N = 256;
 
-	if (orig[j] == low[j]) {
-		for (;;) {
-			int x = z.back(); z.pop_back();
-			comp[x] = no_components;
-			if (x == j) break;
+bitset<N> cangoto[N];
+
+void build_graph(double conn_chance, int n = N)
+{
+	vector<vi> G(n);
+	rep(i,0,n) rep(j,0,n)
+		if (rand() < RAND_MAX * conn_chance)
+			G[i].push_back(j);
+
+	rep(i, 0, n) {
+		cangoto[i].reset();	
+
+		queue<int> q;
+		q.push(i);
+		cangoto[i].set(i);
+		while (!q.empty()) { 
+			int j = q.front();
+			q.pop();
+			for (int k : G[j])
+				if (!cangoto[i].test(k)) cangoto[i].set(k), q.push(k);
 		}
-		no_components++;
+	}
+
+	scc(G, [] (vi a){});
+
+	rep(i, 0, n) rep(j, 0, n) {
+		bool is_scc = cangoto[i].test(j) && cangoto[j].test(i);
+		assert(is_scc == (comp[i] == comp[j]));
 	}
 }
-template<class G> vi scc(G &g) {
-	int n = sz(g);
-	orig.assign(n, 0); low = orig;
-	no_vertices = no_components = 0;
-	comp.assign(n, -1);
-	rep(i,0,n) if (comp[i] == -1) dfs(i, g);
-	return comp;
-}
+
+void test_small()
+{
+	build_graph(0.5, rand() % 10);
 }
 
 int main() {
-	cout << "WARNING: only comparing code with old expected behaviour..." << endl;
+	build_graph(0.00001);
+	build_graph(0.0001);
+	build_graph(0.001);
+	build_graph(0.01);
+	build_graph(0.1);
+	build_graph(0.2);
+	build_graph(0.3);
+	build_graph(0.5);
+	build_graph(0.7);
+	build_graph(0.8);
+	build_graph(0.9);
+	build_graph(0.99);
+	build_graph(0.999);
+	build_graph(0.9999);
+	build_graph(0.99999);
 
-	unsigned r = 1;
-	for (int N = 0; N <= 5; N++) {
-		cout << "N = " << N << endl;
-		vector<vi> mat(N, vi(N)), adj(N);
-		vi compsize(N), seen(N);
-		int count = 0;
-		rep(bits,0,(1 << (N*N))) {
-			if (bits % 10000 == 0) cerr << "." << flush;
-			rep(i,0,N) rep(j,0,N)
-				mat[i][j] = bits & 1 << (i*N+j);
+	rep(_,0,1000) test_small();
 
-			rep(i,0,N) {
-				adj[i].clear();
-				rep(j,0,N) if (bits & 1 << (i*N+j)) {
-					adj[i].push_back(j);
-					r *= 12387123; r += 1231;
-					if ((r >> 6 & 31) == 3)
-						adj[i].push_back(j);
-				}
-			}
-			vi comp2 = old::scc(adj);
-			scc(adj, [&](vi& v) {
-				compsize[ncomps] = sz(v);
-			});
-			if (comp != comp2) {
-				trav(x, comp) cout << x << ' '; cout << endl;
-				trav(x, comp2) cout << x << ' '; cout << endl;
-			}
-			rep(i,0,N) assert(comp[i] >= 0 && comp[i] < ncomps);
-			rep(i,0,N) trav(j, adj[i]) assert(comp[j] <= comp[i]);
-			rep(i,0,N) {
-				seen.assign(N, 0); seen[i] = 1;
-				rep(it,0,N) {
-					rep(j,0,N) if (seen[j]) trav(k, adj[j]) seen[k] = 1;
-				}
-				rep(j,0,N) {
-					if (seen[j]) assert(comp[j] <= comp[i]);
-					else assert(comp[j] != comp[i]);
-				}
-			}
-
-			count++;
-		}
-		cout << "tested " << count << endl;
-	}
 	return 0;
 }
