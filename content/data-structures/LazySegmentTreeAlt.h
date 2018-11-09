@@ -25,7 +25,7 @@ struct segment_tree {
 	int n;
 	vector<node> arr;
 	segment_tree() { }
-	segment_tree(const vector<ll> &a) : n(size(a)), arr(4*n) {
+	segment_tree(const vector<ll> &a) : n(sz(a)), arr(4*n) {
 		mk(a,0,0,n-1); }
 	node mk(const vector<ll> &a, int i, int l, int r) {
 		int m = (l+r)/2;
