@@ -11,13 +11,13 @@
 
 struct Edge { int t; ll c, f; };
 struct Dinic {
-	vi H, P; vvi E;
+	vi H, P; vector<vi> E;
 	vector<Edge> G;
 	Dinic(int n) : H(n), P(n), E(n) {}
 
 	void addEdge(int u, int v, ll c) {
-		E[u].pb(G.size()); G.pb({v, c, 0LL});
-		E[v].pb(G.size()); G.pb({u, 0LL, 0LL});
+		E[u].push_back(G.size()); G.push_back({v, c, 0LL});
+		E[v].push_back(G.size()); G.push_back({u, 0LL, 0LL});
 	}
 	ll dfs(int t, int v, ll f) {
 		if (v == t || !f) return f;
