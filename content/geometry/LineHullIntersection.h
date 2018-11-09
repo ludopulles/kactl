@@ -37,9 +37,9 @@ struct HullIntersection {
 		}
 	}
 
-	int qd(P p) {
-		return (p.y < 0) ? (p.x >= 0) + 2
-		     : (p.x <= 0) * (1 + (p.y <= 0));
+	int qd(P q) {
+		return (q.y < 0) ? (q.x >= 0) + 2
+		     : (q.x <= 0) * (1 + (q.y <= 0));
 	}
 
 	int bs(P dir) {
@@ -54,32 +54,32 @@ struct HullIntersection {
 		return a[hi%N].second;
 	}
 
-	bool isign(P a, P b, int x, int y, int s) {
-		return sgn(a.cross(p[x], b)) * sgn(a.cross(p[y], b)) == s;
+	bool isign(P u, P v, int x, int y, int s) {
+		return sgn(u.cross(p[x], v)) * sgn(u.cross(p[y], v)) == s;
 	}
 
-	int bs2(int lo, int hi, P a, P b) {
+	int bs2(int lo, int hi, P u, P v) {
 		int L = lo;
 		if (hi < lo) hi += N;
 		while (hi - lo > 1) {
 			int mid = (lo + hi) / 2;
-			if (isign(a, b, mid, L, -1)) hi = mid;
+			if (isign(u, v, mid, L, -1)) hi = mid;
 			else lo = mid;
 		}
 		return lo;
 	}
 
-	pii isct(P a, P b) {
-		int f = bs(a - b), j = bs(b - a);
-		if (isign(a, b, f, j, 1)) return {-1, -1};
-		int x = bs2(f, j, a, b)%N,
-		    y = bs2(j, f, a, b)%N;
-		if (a.cross(p[x], b) == 0 &&
-		    a.cross(p[x+1], b) == 0) return {x, x};
-		if (a.cross(p[y], b) == 0 &&
-		    a.cross(p[y+1], b) == 0) return {y, y};
-		if (a.cross(p[f], b) == 0) return {f, -1};
-		if (a.cross(p[j], b) == 0) return {j, -1};
+	pii isct(P u, P v) {
+		int f = bs(u - v), j = bs(v - u);
+		if (isign(u, v, f, j, 1)) return {-1, -1};
+		int x = bs2(f, j, u, v) % N,
+		    y = bs2(j, f, u, v) % N;
+		if (u.cross(p[x], v) == 0 &&
+		    u.cross(p[x+1], v) == 0) return {x, x};
+		if (u.cross(p[y], v) == 0 &&
+		    u.cross(p[y+1], v) == 0) return {y, y};
+		if (u.cross(p[f], v) == 0) return {f, -1};
+		if (u.cross(p[j], v) == 0) return {j, -1};
 		return {x, y};
 	}
 };

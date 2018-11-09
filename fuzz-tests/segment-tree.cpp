@@ -30,7 +30,7 @@ struct Tree {
 	const T LOW = 0;
 	T f(T a, T b) { return lut[a][b]; }
 	vector<T> s; int n;
-	Tree(int n = 0, T def = 0) : s(2*n, def), n(n) {}
+	Tree(int _n = 0, T def = 0) : s(2*_n, def), n(_n) {}
 	void update(int pos, T val) {
 		for (s[pos += n] = val; pos > 1; pos /= 2)
 			s[pos / 2] = f(s[pos & ~1], s[pos | 1]);
