@@ -1,4 +1,4 @@
-#include "template-no-main.cpp"
+#include "template-no-main.h"
 #include "../content/numerical/FFTOptimized.h"
 
 // As a comparison:
