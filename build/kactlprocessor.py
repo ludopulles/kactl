@@ -249,7 +249,8 @@ def main():
         if print_header_value is not None:
             print_header(print_header_value, outstream)
             return
-        print(" * \x1b[1m{}\x1b[0m\n".format(caption))
+        # print filename in bold face:
+        print(" * \x1b[1m{}\x1b[0m".format(caption))
 
         aliases = {
             'cpp': 'cpp', 'cc': 'cpp', 'c': 'cpp', 'h': 'cpp', 'hpp': 'cpp',
