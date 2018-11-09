@@ -23,9 +23,8 @@ struct MCMF {
 	VL dist, pi;
 	vector<pii> par;
 
-	MCMF(int N) :
-		N(N), ed(N), red(N), cap(N, VL(N)), flow(cap), cost(cap),
-		seen(N), dist(N), pi(N), par(N) {}
+	MCMF(int n) : N(n), ed(N), red(N), cap(N, VL(N)), flow(cap),
+		cost(cap), seen(N), dist(N), pi(N), par(N) {}
 
 	void addEdge(int from, int to, ll cap, ll cost) {
 		this->cap[from][to] = cap;
@@ -79,15 +78,13 @@ struct MCMF {
 		return {totflow, totcost};
 	}
 
-	// If some costs can be negative, call this before maxflow:
-	void setpi(int s) { // (otherwise, leave this out)
+	// Optional: if ∃ costs<0, call this before maxflow:
+	bool setpi(int s) {
 		fill(all(pi), INF); pi[s] = 0;
 		int it = N, ch = 1; ll v;
-		while (ch-- && it--)
-			rep(i,0,N) if (pi[i] != INF)
-				trav(to, ed[i]) if (cap[i][to])
-					if ((v = pi[i] + cost[i][to]) < pi[to])
-						pi[to] = v, ch = 1;
-		assert(it >= 0); // negative cost cycle
+		while (ch-- && it--) rep(i,0,N) if (pi[i] != INF)
+			trav(to, ed[i]) if (cap[i][to] && (v = pi[i]+cost[i][to]) < pi[to])
+				pi[to] = v, ch = 1;
+		return it >= 0; // returns iff we have NO negative cycles
 	}
 };

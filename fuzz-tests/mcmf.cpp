@@ -1,19 +1,6 @@
 #include "template-no-main.h"
 
-// #include "mcmf3.h"
-// #include "mcmf4.h"
-// #include "mcmfold.h"
-// #include "mcmfnew.h"
-
-// what the ....
-// TODO: you can do this better!
-#define setpi dummy(){} bool setpi
-#undef assert
-#define assert(x) return x
 #include "../content/graph/MinCostMaxFlow.h"
-#undef assert
-#undef setpi
-#include <cassert>
 
 // Yes, we should not be using this...
 // Why is this in the test directory anyway?
@@ -30,20 +17,6 @@ struct MCMF2 {
 	}
 	void setpi(int s) {}
 };
-
-// typedef MCMF2 MCMF;
-
-#if 1
-static size_t i;
-#else
-static char buf[450 << 20];
-static size_t i = sizeof buf;
-void* operator new(size_t s) {
-	assert(s < i);
-	return (void*)&buf[i -= s];
-}
-void operator delete(void*) noexcept {}
-#endif
 
 typedef vector<ll> vd;
 bool zero(ll x) { return x == 0; }
@@ -128,7 +101,6 @@ ll MinCostMatching(const vector<vd>& cost, vi& L, vi& R) {
 }
 
 void testPerf() {
-	srand(2);
 	int N = 500, E = 10000, CAPS = 100, COSTS = 100000;
 	MCMF mcmf(N);
 	int s = 0, t = 1;
@@ -148,7 +120,6 @@ void testPerf() {
 
 void testMatching() {
 	rep(it,0,100000) {
-		size_t last = ::i;
 		int N = rand() % 10, M = rand() % 10;
 		int NM = max(N, M);
 		vector<vd> co(NM, vd(NM));
@@ -160,18 +131,19 @@ void testMatching() {
 		rep(i,0,N) mcmf.addEdge(S, i, 1, 0);
 		rep(i,0,M) mcmf.addEdge(N+i, T, 1, 0);
 		rep(i,0,N) rep(j,0,M) mcmf.addEdge(i, N+j, 1, co[i][j] - 2);
-		mcmf.setpi(S);
+		assert(mcmf.setpi(S));
 		auto pa = mcmf.maxflow(S, T);
 		assert(pa.first == min(N, M));
 		assert(pa.second == v - 2 * pa.first);
-		::i = last;
 	}
 }
 
 void testNeg() {
 	int ed[100][100];
+
+	int nnegcycles = 0, nvalid = 0;
+
 	rep(it,0,1000000) {
-		size_t lasti = ::i;
 		int N = rand() % 7 + 2;
 		int M = rand() % 17;
 		int S = 0, T = 1;
@@ -188,19 +160,18 @@ void testNeg() {
 				mcmf2.addEdge(i, j, fl, co);
 			}
 		}
-		if (!mcmf.setpi(S)) {
-			cerr << '!';
-			continue;
-		}
-		cerr << '.';
+		if (!mcmf.setpi(S)) { nnegcycles++; continue; }
+
 		auto pa = mcmf.maxflow(S, T);
 		auto pa2 = mcmf2.maxflow(S, T);
 		assert(pa == pa2);
-		::i = lasti;
+		nvalid++;
 	}
+	assert(nvalid > 1e4 && nnegcycles > 1e4);
 }
 
 int main() {
+	srand(98723);
 	testMatching();
 	testNeg();
 }

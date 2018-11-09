@@ -37,9 +37,9 @@ int main()
 
 	// try different methods.
 	// timefunc(T1, "fmodpow");
-	timefunc(T2, "impfmodpow", 300);
+	timefunc(T2, "impfmodpow", 500);
 	// timefunc(T3, "modpow");
-	timefunc(T4, "impmodpow", 600);
+	timefunc(T4, "impmodpow", 800);
 
 	return 0;
 }
