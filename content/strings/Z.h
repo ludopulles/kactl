@@ -4,10 +4,10 @@
  * Source: folklore
  * Description: \texttt{z[i]} is the length of longest substring starting from $i$.
  * Note that z[0] = 0 though, which you often want.
- * Time: O(N)
+ * Time: O(n)
  */
 
-vi z_function(const string &s) {
+vi z_fn(const string &s) {
 	int n = sz(s), l=0,r=0; vi z(n);
 	rep(i, 1, n) {
 		if (i <= r) z[i] = min (r - i + 1, z[i - l]);
