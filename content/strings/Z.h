@@ -3,6 +3,7 @@
  * License: CC0
  * Source: folklore
  * Description: \texttt{z[i]} is the length of longest substring starting from $i$.
+ * Note that z[0] = 0 though, which you often want.
  * Time: O(N)
  */
 
