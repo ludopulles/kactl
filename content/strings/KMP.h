@@ -19,6 +19,7 @@ vi pi_fn(const string &s) {
 }
 
 vi KMP(const string &pat, const vi &p, const string &text) {
+	if (sz(pat) > sz(text)) return {}; // pattern longer than text
 	vi res; // assert(pi(pat) == p);
 	for (int i = 0, j = 0; i < sz(text); ) {
 		if (text[i] == pat[j]) {
