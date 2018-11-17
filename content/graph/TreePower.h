@@ -21,8 +21,7 @@ vector<vi> treeJump(vi& P){
 }
 
 int jmp(vector<vi>& tbl, int nod, int steps){
-	rep(i,0,sz(tbl))
-		if(steps&(1<<i)) nod = tbl[i][nod];
+	rep(i,0,sz(tbl)) if(steps&(1<<i)) nod = tbl[i][nod];
 	return nod;
 }
 

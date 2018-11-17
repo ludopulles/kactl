@@ -20,21 +20,16 @@ typedef vector<pii> vpi;
 typedef vector<vpi> graph;
 
 #include "../data-structures/RMQ.h"
-
 struct LCA {
-	vi time;
-	vector<ll> dist;
-	RMQ<pii> rmq;
-
+	vi time; vector<ll> dist; RMQ<pii> rmq;
 	LCA(graph& C) : time(sz(C), -99), dist(sz(C)), rmq(dfs(C)) {}
 
 	vpi dfs(graph& C) {
 		vector<tuple<int, int, int, ll>> q(1);
-		vpi ret;
-		int T = 0, v, p, d; ll di;
+		vpi ret; ll di;
+		int T = 0, v, p, d;
 		while (!q.empty()) {
-			tie(v, p, d, di) = q.back();
-			q.pop_back();
+			tie(v, p, d, di) = q.back(); q.pop_back();
 			if (d) ret.emplace_back(d, p);
 			time[v] = T++;
 			dist[v] = di;
@@ -50,7 +45,6 @@ struct LCA {
 		return rmq.query(min(a, b), max(a, b)).second;
 	}
 	ll distance(int a, int b) {
-		int lca = query(a, b);
-		return dist[a] + dist[b] - 2 * dist[lca];
+		return dist[a] + dist[b] - 2 * dist[query(a, b)];
 	}
 };

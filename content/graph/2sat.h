@@ -16,18 +16,11 @@
 #pragma once
 
 struct TwoSat {
-	int N;
-	vector<vi> gr;
-	vi values; // 0 = false, 1 = true
-
+	int N; vector<vi> gr; vi values; // 0 = false, 1 = true
 	TwoSat(int n = 0) : N(n), gr(2*n) {}
 
-	int add_var() { // (optional)
-		gr.emplace_back();
-		gr.emplace_back();
-		return N++;
-	}
-
+	int add_var() {gr.emplace_back();gr.emplace_back();return N++;}
+	// f or j should be satisfied:
 	void either(int f, int j) {
 		f = max(2*f, -1-2*f);
 		j = max(2*j, -1-2*j);
@@ -56,10 +49,8 @@ struct TwoSat {
 			low = min(low, val[e] ?: dfs(e));
 		++time;
 		if (low == val[i]) do {
-			x = z.back(); z.pop_back();
-			comp[x] = time;
-			if (values[x>>1] == -1)
-				values[x>>1] = !(x&1);
+			x = z.back(); z.pop_back(); comp[x] = time;
+			if (values[x>>1] == -1) values[x>>1] = ~x & 1;
 		} while (x != i);
 		return val[i] = low;
 	}

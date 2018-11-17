@@ -27,31 +27,24 @@ double MinCostMatching(const vector<vd>& cost, vi& L, vi& R) {
 
 	/// find primal solution satisfying complementary slackness
 	L = R = vi(n, -1);
-	rep(i,0,n) rep(j,0,n) {
-		if (R[j] != -1) continue;
-		if (zero(cost[i][j] - u[i] - v[j])) {
-			L[i] = j;
-			R[j] = i;
-			mated++;
-			break;
+	rep(i,0,n) rep(j,0,n)
+		if (R[j] == -1 && zero(cost[i][j] - u[i] - v[j])) {
+			L[i] = j; R[j] = i;
+			mated++; break;
 		}
-	}
 
 	for (; mated < n; mated++) { // until solution is feasible
-		int s = 0;
+		int s = 0, j = 0;
 		while (L[s] != -1) s++;
 		fill(all(dad), -1);
 		fill(all(seen), 0);
-		rep(k,0,n)
-			dist[k] = cost[s][k] - u[s] - v[k];
+		rep(k,0,n) dist[k] = cost[s][k] - u[s] - v[k];
 
-		int j = 0;
 		for (;;) { /// find closest
 			j = -1;
-			rep(k,0,n){
-				if (seen[k]) continue;
-				if (j == -1 || dist[k] < dist[j]) j = k;
-			}
+			rep(k,0,n) if (!seen[k] &&
+				(j == -1 || dist[k] < dist[j])) j = k;
+
 			seen[j] = 1;
 			int i = R[j];
 			if (i == -1) break;
@@ -76,12 +69,10 @@ double MinCostMatching(const vector<vd>& cost, vi& L, vi& R) {
 		/// augment along path
 		while (dad[j] >= 0) {
 			int d = dad[j];
-			R[j] = R[d];
-			L[R[j]] = j;
+			R[j] = R[d]; L[R[j]] = j;
 			j = d;
 		}
-		R[j] = s;
-		L[s] = j;
+		R[j] = s; L[s] = j;
 	}
 	auto value = vd(1)[0];
 	rep(i,0,n) value += cost[i][L[i]];

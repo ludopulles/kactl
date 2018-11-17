@@ -19,23 +19,16 @@
 
 typedef vector<pii> vpi;
 
-struct Node {
-	int d, par, val, chain = -1, pos = -1;
-};
+struct Node { int d, par, val, chain = -1, pos = -1; };
 
-struct Chain {
-	int par, val;
-	vector<int> nodes;
-	Tree tree;
-};
+struct Chain { int par, val; vector<int> nodes; Tree tree; };
 
 struct HLD {
 	typedef int T;
 	const T LOW = -(1<<29);
 	void f(T& a, T b) { a = max(a, b); }
 
-	vector<Node> V;
-	vector<Chain> C;
+	vector<Node> V; vector<Chain> C;
 
 	HLD(vector<vpi>& g) : V(sz(g)) {
 		dfs(0, -1, g, 0);
@@ -67,10 +60,8 @@ struct HLD {
 				f(ans, C[n1.chain].tree.query(lo, hi));
 				i1 = i2 = C[n1.chain].nodes[hi];
 			} else {
-				if (pard(n1) < pard(n2))
-					n1 = n2, swap(i1, i2);
-				if (n1.chain == -1)
-					f(ans, n1.val), i1 = n1.par;
+				if (pard(n1) < pard(n2)) n1 = n2, swap(i1, i2);
+				if (n1.chain == -1) f(ans, n1.val), i1 = n1.par;
 				else {
 					Chain& c = C[n1.chain];
 					f(ans, n1.pos ? c.tree.query(n1.pos, sz(c.nodes))
