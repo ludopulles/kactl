@@ -13,7 +13,7 @@
 struct node {
   int l, r; ll x, lazy;
   node() {}
-  node(int _l, int _r) : l(_l), r(_r), x(LLINF), lazy(0) { }
+  node(int _l, int _r) : l(_l), r(_r), x(LLONG_MAX), lazy(0) { }
   node(int _l, int _r, ll _x) : node(_l,_r) { x = _x; }
   node(node a, node b) : node(a.l,b.r) { x = min(a.x, b.x); }
   void update(ll v) { x = v; }
