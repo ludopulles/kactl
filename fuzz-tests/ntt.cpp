@@ -17,6 +17,10 @@ int main() {
 	srand(397862876);
 	vl a, b;
 
+	a = { rand() }, b = { rand() };
+	vl found = conv(a, b);
+	assert(found.size() == 1 && found.front() == a[0] * b[0] % nmod);
+
 	// small samples. (~0.3s)
 	rep(it,0,100000) {
 		a.resize(1 + (rand() % 10));

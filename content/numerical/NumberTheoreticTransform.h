@@ -38,7 +38,7 @@ void ntt(vl& x, bool inv = false) {
 }
 vl conv(vl a, vl b) {
 	if (a.empty() || b.empty()) return {};
-	int s = sz(a) + sz(b) - 1, L = 32 - __builtin_clz(s-1), n = 1 << L;
+	int s = sz(a) + sz(b) - 1, L = s>1 ? 32 - __builtin_clz(s-1) : 0, n = 1 << L;
 	if (s <= 200) {
 		vl c(s); // (3x faster for |a|,|b| = 10)
 		rep(i,0,sz(a)) rep(j,0,sz(b))
