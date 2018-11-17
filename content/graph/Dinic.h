@@ -16,12 +16,12 @@ struct Dinic {
 	Dinic(int n) : H(n), P(n), E(n) {}
 
 	void addEdge(int u, int v, ll c) {
-		E[u].push_back(G.size()); G.push_back({v, c, 0LL});
-		E[v].push_back(G.size()); G.push_back({u, 0LL, 0LL});
+		E[u].push_back(sz(G)); G.push_back({v, c, 0LL});
+		E[v].push_back(sz(G)); G.push_back({u, 0LL, 0LL});
 	}
 	ll dfs(int t, int v, ll f) {
 		if (v == t || !f) return f;
-		for ( ; P[v] < (int) E[v].size(); P[v]++) {
+		for ( ; P[v] < sz(E[v]); P[v]++) {
 			int e = E[v][P[v]], w = G[e].t;
 			if (H[w] != H[v] + 1) continue;
 			ll df = dfs(t, w, min(f, G[e].c - G[e].f));
