@@ -14,9 +14,9 @@ struct misof_tree {
 	int cnt[BITS][1<<BITS];
 	misof_tree() { memset(cnt, 0, sizeof(cnt)); }
 	void add(int x, int dv) { // +1 <-> add, -1 <-> erase
-		for (int i = 0; i < BITS; cnt[i++][x] += dv, x >>=, 1); }
+		for (int i = 0; i < BITS; cnt[i++][x] += dv, x >>= 1); }
 	int nth(int n) {
-		int res = 0;
-		for (int i = BITS; i--;) if (cnt[i][res <<= 1] <= n)
-			n -= cnt[i][res], res |= 1;
-		return res; } }; 
+		int r = 0, i = BITS;
+		while (i--) if (cnt[i][r <<= 1] <= n)
+			n -= cnt[i][r], r |= 1;
+		return r; } }; 
