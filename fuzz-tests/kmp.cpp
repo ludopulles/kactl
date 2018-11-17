@@ -13,7 +13,7 @@ void gen(string& s, int at, int alpha, F f) {
 }
 
 void test(const string& s) {
-	vi p = pi_fn(s);
+	vi p = pi(s);
 	rep(i,0,sz(s)) {
 		int maxlen = -1;
 		rep(len,0,i+1) {
@@ -28,17 +28,6 @@ fail:;
 }
 
 int main() {
-	vi found, expected;
-
-	found = KMP("aba", pi_fn("aba"), "abacaba");
-	expected = { 0, 4 };
-	assert(found == expected);
-
-	found = KMP("aba", pi_fn("aba"), "abababcdaba");
-	expected = { 0, 2, 8 };
-	assert(found == expected);
-	
-
 	// string str; cin >> str; trav(x, pi(str)) cout << x; cout << endl;
 	// test ~3^12 strings
 	rep(n,0,13) {
